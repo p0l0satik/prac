@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <math.h>
+
 
 void 
 normalize_path(char *buf)
@@ -7,8 +7,8 @@ normalize_path(char *buf)
     char * begin = buf;
     char * end = buf;
     int flag = 0;
-    while (*end){
-        if (!flag){
+    while (*end) {
+        if (!flag) {
             if (*end == '/') {
                 flag = 1;
             }
@@ -16,7 +16,7 @@ normalize_path(char *buf)
             begin++;
             end++; 
         } else if (flag) {
-            if (*end == '/'){
+            if (*end == '/') {
                 end++;
             } else {
                 flag = 0;
@@ -29,12 +29,4 @@ normalize_path(char *buf)
     *begin = '\0';
 }
 
-int 
-main(void)
-{
-    char bug[100];
-    scanf("%s", bug);
-    normalize_path(bug);
-    printf("%s\n", bug);
-    return 0;
-}
+
