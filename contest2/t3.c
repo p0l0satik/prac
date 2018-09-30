@@ -1,7 +1,7 @@
 #include <stdio.h>
 enum
 {
-    PATH_MAX = 6000,
+    PATH_MAX = 4096,
     TEMP_SIZE = 4096,
     CODE_ZERO = 48,
     DECIMAL_BASIS = 10
@@ -19,7 +19,7 @@ main(void)
 {   
     unsigned long long int num_arr[DECIMAL_BASIS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     char str[PATH_MAX];
-    if (!fgets(str, PATH_MAX, stdin)) { 
+    if (!fgets(str, sizeof(str), stdin)) { 
         prnt(num_arr);
         return 0;
     }
@@ -35,7 +35,7 @@ main(void)
         return 0;
     }
     char temp[TEMP_SIZE];
-    while (fgets(temp, TEMP_SIZE, f) != NULL) {
+    while (fgets(temp, sizeof(temp), f) != NULL) {
         for (int t = 0; t < TEMP_SIZE && temp[t]; t++){
             if (temp[t] >= '0' && temp[t] <= '9') {
                 num_arr[temp[t] - CODE_ZERO]++;

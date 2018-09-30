@@ -10,8 +10,8 @@ enum
  
 char *getline2(FILE *f) 
 {   
-    unsigned long long int size = READ_SIZE;
-    unsigned long long int now_s = 0;
+    size_t size = READ_SIZE;
+    size_t now_s = 0;
     char *s = calloc(size, sizeof(*s));
     if (!s) {
         return NULL;
