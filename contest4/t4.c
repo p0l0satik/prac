@@ -1,6 +1,3 @@
-#include <stdio.h>
-
-
 void 
 normalize_path(char *buf)
 {
