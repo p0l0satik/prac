@@ -4,7 +4,7 @@
 
 enum
 {
-    READ_SIZE = 4096
+    READ_SIZE = 128
 };
 
  
@@ -36,5 +36,5 @@ char *getline2(FILE *f)
     }
     free(s);
     return NULL;
-    
 }
+

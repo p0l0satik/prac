@@ -1,9 +1,9 @@
 #include <stdio.h>
+#include <linux/limits.h>
+
 enum
 {
-    PATH_MAX = 4096,
     TEMP_SIZE = 4096,
-    CODE_ZERO = 48,
     DECIMAL_BASIS = 10
 };
 
@@ -38,7 +38,7 @@ main(void)
     while (fgets(temp, sizeof(temp), f) != NULL) {
         for (int t = 0; t < TEMP_SIZE && temp[t]; t++){
             if (temp[t] >= '0' && temp[t] <= '9') {
-                num_arr[temp[t] - CODE_ZERO]++;
+                num_arr[temp[t] - '0']++;
             }
         }
     } 

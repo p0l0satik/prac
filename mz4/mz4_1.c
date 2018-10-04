@@ -4,7 +4,7 @@
 int 
 main(void)
 {
-    int32_t n, w;
+    int n, w;
     scanf("%o%o", &n, &w);
 
     int32_t st = 1;

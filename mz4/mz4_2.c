@@ -1,36 +1,24 @@
 #include <stdio.h>
 #include <math.h>
-
+enum 
+{
+    STRL = 9
+};
 int 
 main(int argc, char const *argv[])
 {
+    const char str[9] = "rwxrwxrwx";
     for (int i = 1; i < argc; i++) {
-        int num;
-        sscanf(argv[i], "%d", &num);
-        unsigned int arr[3] = {0, 0, 0};
-
-        for (int t = 0; num; t++){
-            arr[t] = num % 10;
-            num /= 10;
+        unsigned num;
+        int arr[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+        sscanf(argv[i], "%o", &num);
+        for(int t = 0; t < STRL; t++) {
+            arr[STRL - 1 - t] = num & 1;
+            num >>=1;
         }
-        for (int t = 2; t >= 0; t--){
-            int arr2[3] = {0, 0, 0};
-            for (int j = 0; arr[t]; j++) {
-                arr2[j] = arr[t] & 1;
-                arr[t] >>= 1;
-            }
-            if (arr2[2]){
-                printf("r");
-            } else {
-                printf("-");
-            }
-            if (arr2[1]){
-                printf("w");
-            } else {
-                printf("-");
-            }
-            if (arr2[0]){
-                printf("x");
+        for (int t = 0; t < STRL; t++){
+            if (arr[t]) {
+                printf("%c", str[t]);
             } else {
                 printf("-");
             }
@@ -41,4 +29,3 @@ main(int argc, char const *argv[])
  
     return 0;
 }
-////111////1111
