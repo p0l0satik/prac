@@ -26,9 +26,10 @@ main(int argc, char const *argv[])
             n = t;
         }
     }
-    min = -min;
-    lseek(f, sizeof(min)*n, SEEK_SET);
-    write(f, &min, 8);
+    unsigned long long int sign_ch = (unsigned long long int)min;
+    sign_ch = ~sign_ch + 1;
+    lseek(f, sizeof(sign_ch)*n, SEEK_SET);
+    write(f, &sign_ch, 8);
     close(f);
 
 
