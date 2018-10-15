@@ -7,7 +7,7 @@ struct Task
 {
     unsigned uid;
     int gid_count;
-    unsigned gids[10];
+    unsigned * gids;
 };
 
 enum 
@@ -36,16 +36,17 @@ static int is_in_group(const unsigned gid, const struct Task *task) {
     return 0;
 }
 int myaccess(const struct stat *stb, const struct Task *task, int access){
-    int users_rights = 0;
+
+    if (!task->uid) {
+        return 1;
+    }
     if (task->uid == stb->st_uid){
-        users_rights |= (stb->st_mode & S_IRWXU) >> USER_OFFSET;
+        return check_rights((stb->st_mode & S_IRWXU) >> USER_OFFSET, access);
     }
     if (is_in_group(stb->st_gid, task)){
-        users_rights |= (stb->st_mode & S_IRWXG) >> GROUP_OFFSET;
+        return check_rights((stb->st_mode & S_IRWXG) >> GROUP_OFFSET, access);
     }
-
-    users_rights |= stb->st_mode & S_IRWXO;
-    return check_rights(users_rights, access);
+    return check_rights(stb->st_mode & S_IRWXO, access);
 }
 
 

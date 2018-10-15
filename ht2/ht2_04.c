@@ -1,31 +1,38 @@
 #include <stdio.h>
+#include <limits.h>
+enum 
+{
+    REVERSE_PRINT_NUM = CHAR_BIT - 1
+};
 int 
 main(void) {
-    unsigned int a, arr[8][8];
-    
-    while (scanf("%x", &a)) {
-        for (int t = 1; t < 8; t++) {
-            for (int i = 0; i < 8; i++){
+    unsigned char a, arr[CHAR_BIT][CHAR_BIT];
+
+    while (scanf("%hhx", &a) == 1) {
+
+        for (int t = 0; t < CHAR_BIT; t++) {
+            if (t > 0) {
+                if (scanf("%hhx", &a) != 1){
+                    return 1;
+                }
+            }
+            for (int i = 0; i < CHAR_BIT; i++){
                 arr[t][i] = a & 1;
                 a >>= 1;
             }
         }
-        for (int i = 0; i < 4; i++){
-            for (int j = i; j < 4; j++){
-                int a = arr[i][j];
-                arr[i][j] = arr[j][i];
-                arr[j][i] = a;
-            }
-        }
 
-        for (int t = 1; t < 8; t++) {
+        for (int t = 0; t < CHAR_BIT; t++) {
             a = 0;
-            for (int i = 0; i < 8; i++){
-                a += arr[t][i];
-                a <<= 1;
+            for (int i = 0; i < CHAR_BIT; i++){
+                a += arr[REVERSE_PRINT_NUM - i][t];
+                if (i < REVERSE_PRINT_NUM) {
+                    a <<= 1;
+                }
             }
-            printf("%xs", a);
+            printf("%hhx ", a);
         }
     }
+    printf("\n");
     return 0;
 }
