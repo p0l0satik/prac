@@ -2,29 +2,24 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <netinet/in.h>
 #include <unistd.h>
 
-int main(int argc, char const *argv[]) {
-    unsigned int get, conv;
-    if (!argv[1]) {
+int main(int argc, const char* argv[]) {
+    unsigned get;
+    if (argc < 2 ) {
         return 1;
-    }
-    int fd = open(argv[1], O_WRONLY| O_CREAT, 0600);
-    while (fscanf(stdin, "%u", &get) == 1){
-        conv = get;
-        for(int t = 0; t < 3; t++){
-            conv += get & 255;
-            conv <<= 8;
-            get >>= 8;
+    } 
+    char buf[sizeof(get)];
+    int fd = open(argv[1], O_WRONLY | O_TRUNC | O_CREAT, 0600);
+    while (scanf("%u", &get) == 1 ){
+        for (int t = 0; t < sizeof(get); t++){
+            buf[sizeof(get) - 1 - t] = (get >> t * 8) & 0xFF; 
         }
-        conv >>= 1;
-        conv += get & 256;
-        
-
-        write(fd, &conv, 4);
-        
+        write(fd, &buf, sizeof(get));
     }
+    
     close(fd);
     
+
+    return 0;
 }
