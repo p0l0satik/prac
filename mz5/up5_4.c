@@ -17,14 +17,7 @@ enum
 };
 
 static int check_rights(unsigned rights, unsigned access){
-    for(int t = 0; t < 3; t++){
-        if ((access & 1) == 1 && (rights & 1) == 0){
-            return 0;
-        }
-        access >>= 1;
-        rights >>= 1;
-    }
-    return 1;
+    return (access & rights) == access;
 }
 
 static int is_in_group(const unsigned gid, const struct Task *task) {
@@ -35,19 +28,20 @@ static int is_in_group(const unsigned gid, const struct Task *task) {
     }
     return 0;
 }
-int myaccess(const struct stat *stb, const struct Task *task, int access){
+int myaccess(const struct stat *stb, const struct Task *task, int access) {
 
     if (!task->uid) {
         return 1;
     }
-    if (task->uid == stb->st_uid){
+    if (task->uid == stb->st_uid) {
         return check_rights((stb->st_mode & S_IRWXU) >> USER_OFFSET, access);
     }
-    if (is_in_group(stb->st_gid, task)){
+    if (is_in_group(stb->st_gid, task)) {
         return check_rights((stb->st_mode & S_IRWXG) >> GROUP_OFFSET, access);
     }
     return check_rights(stb->st_mode & S_IRWXO, access);
 }
+
 
 
 

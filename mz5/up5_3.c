@@ -5,6 +5,9 @@ int
 main(int argc, char const *argv[])
 {
     FILE *f = fopen(argv[1], "r");
+    if (!f) {
+        return 1;
+    }
     time_t now, next;
     int year, month, day, hour, minut, sec;
     struct tm date;
