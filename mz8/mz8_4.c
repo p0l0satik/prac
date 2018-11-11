@@ -19,7 +19,6 @@ int main(int argc, char const *argv[])
         if (t < n)  {
             if (fork()){
                 wait(NULL);
-                
                 break;
             } 
         }
