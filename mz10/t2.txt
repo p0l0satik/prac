@@ -1,0 +1,22 @@
+a
+      16      16     122
+      16      16     122
+      16      16     122
+      16      16     122
+      16      16     122
+a.out
+mz10_1.c
+mz10_2.c
+mz10_3.c
+mz10_4.c
+sh.c
+t1.txt
+t2.txt
+a.out
+mz10_1.c
+mz10_2.c
+mz10_3.c
+mz10_4.c
+sh.c
+t1.txt
+t2.txt
