@@ -1,72 +1,67 @@
 #include <stdio.h>
+#include <signal.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <time.h>
 
-#include <sys/types.h>
-
-
-#include <signal.h>
-
-void cls(int fd[2]){
-    close(fd[0]);
-    close(fd[1]);
+void kill_them_all(int *pid_arr, int n) {
+    for (int t = 0; t < n; t++) {
+        kill(pid_arr[t], SIGKILL);
+        
+    }
+    free(pid_arr);
+    close(0);
+    while(wait(NULL) != -1);
 }
-
-
+void cls(int fd[2]) {
+    close(fd[1]);
+    close(fd[0]);
+}
 int main(int argc, char const *argv[])
-{   
-    if (argc == 1) {
+{
+    int fd[2];
+    if (argc < 2) {
         return 0;
     }
-    int *pids = calloc(argc, sizeof(int));
+    int *pid_arr = calloc(argc - 1, sizeof(*pid_arr));
 
-
-    int fd[2];
-    for (int t = 1; t < argc - 1; t++) {
-        pipe(fd);
-        int pid =  fork();
-        if (pid == -1) {
-            for(int i = 1; i < t - 1; i++) {
-                if (!waitpid(pids[i], NULL, WNOHANG)) {
-                    kill(pids[i], SIGKILL);
-                }
-            }
-            free(pids);
-            cls(fd);
-            return 1;
-        } else {
-            pids[t] = pid;
+    for(int t = 1; t < argc - 1; t++) {
+        if (pipe(fd) == -1) {
+            kill_them_all(pid_arr, t - 1);
+            exit(1);
         }
-        if(!pid) {
+        int pid = fork();
+        
+        if (pid == -1) {
+            cls(fd);
+            kill_them_all(pid_arr, t - 1);
+            exit(1);
+        }
+        pid_arr[t - 1] = pid;
+        if (!pid) {
             dup2(fd[1], 1);
             cls(fd);
             execlp(argv[t], argv[t], NULL);
-            _exit(1);
-        } else {
-            dup2(fd[0], 0);
+            exit(1);
+        } 
+        if (dup2(fd[0], 0) == -1) {
             cls(fd);
+            kill_them_all(pid_arr, t);
+            exit(1);
         }
+        cls(fd);
     }
     int pid = fork();
-
     if (pid == -1) {
-        for(int i = 0; i < argc - 1; i++) {
-            if (!waitpid(pids[i], NULL, WNOHANG)) {
-                kill(pids[i], SIGKILL);
-            }
-        }
-        free(pids);
-        cls(fd);
+        kill_them_all(pid_arr, argc - 1);
         return 1;
     }
     if (!pid) {
         execlp(argv[argc - 1], argv[argc - 1], NULL);
-        _exit(1);
+        exit(1);
     }
+    close(0);
     while(wait(NULL) != -1);
-    free(pids);
-   
+    free(pid_arr);
     return 0;
 }
